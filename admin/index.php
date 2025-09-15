@@ -15,8 +15,49 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     <meta charset="UTF-8">
     <title>แผงควบคุมผู้ดูแลระบบ</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #ffe6f2, #e6f0ff, #fffbe6);
+            font-family: 'Prompt', sans-serif;
+            min-height: 100vh;
+        }
+        h2 {
+            color: #d63384;
+        }
+        .card {
+            border-width: 2px;
+            border-radius: 12px;
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        .border-warning { border-color: #ffcc00 !important; }
+        .border-primary { border-color: #81d4fa !important; }
+        .border-success { border-color: #ba68c8 !important; }
+        .border-dark { border-color: #ff66b2 !important; }
+
+        .text-warning { color: #ffcc00 !important; }
+        .text-primary { color: #81d4fa !important; }
+        .text-success { color: #ba68c8 !important; }
+        .text-dark { color: #ff66b2 !important; }
+
+        .btn-outline-secondary {
+            border-color: #ba68c8;
+            color: #ba68c8;
+        }
+        .btn-outline-secondary:hover {
+            background-color: #ba68c8;
+            color: #fff;
+        }
+
+        .card-text {
+            color: #555;
+        }
+    </style>
 </head>
-<body class="bg-light">
+<body>
 
 <div class="container mt-5">
     <!-- Header -->
@@ -54,7 +95,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
         </div>
 
         <div class="col-md-3">
-            <a href="categories.php" class="text-decoration-none">
+            <a href="category.php" class="text-decoration-none">
                 <div class="card shadow-sm border-success">
                     <div class="card-body text-center">
                         <h5 class="card-title text-success">🗂️ จัดการหมวดหมู่</h5>
