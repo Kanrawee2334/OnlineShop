@@ -66,6 +66,7 @@ try {
     $categories = [];
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -74,7 +75,7 @@ try {
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
 body {
-    background: linear-gradient(135deg, #ffe6f2, #f2e6ff, #e6faff, #fffbe6);
+    background: #fff0f6;
     min-height: 100vh;
     padding: 30px;
     font-family: 'Kanit', sans-serif;
@@ -83,73 +84,23 @@ h2, h5 {
     color: #d63384;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
-.btn-primary { 
-    background-color: #ba68c8; 
-    border: none; 
-    font-weight: bold;
-}
-.btn-primary:hover { 
-    background-color: #9c27b0; 
-}
-.btn-secondary { 
-    background-color: #81d4fa; 
-    border: none; 
-    color: #333;
-}
-.btn-secondary:hover {
-    background-color: #4fc3f7;
-}
-.btn-warning { 
-    background-color: #ffeb3b; 
-    border: none; 
-    color: #333; 
-}
-.btn-warning:hover {
-    background-color: #fdd835;
-}
-.btn-danger { 
-    background-color: #ff66b2; 
-    border: none; 
-    color: #fff; 
-}
-.btn-danger:hover {
-    background-color: #e0559d;
-}
-.form-control {
-    border-radius: 12px;
-    border: 2px solid #ba68c8;
-    transition: 0.3s;
-}
-.form-control:focus { 
-    border-color: #81d4fa; 
-    box-shadow: 0 0 8px rgba(129,212,250,0.5);
-}
-table.table {
-    background: #fdfdfd;
-    width:  100%;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-table th {
-    background: #f3e6f7;
-    color: #6c3483;
-}
-table td {
-    vertical-align: middle;
-}
-.alert-danger { 
-    background: #ffd6e8; 
-    color: #9b1c6d; 
-    border-radius: 12px; 
-    border: 1px solid #ffb3d9;
-}
-.alert-success { 
-    background: #d4edda; 
-    color: #155724; 
-    border-radius: 12px; 
-    border: 1px solid #b3ffcc;
-}
+.btn-primary { background-color: #ba68c8; border: none; font-weight: bold; }
+.btn-primary:hover { background-color: #9c27b0; }
+.btn-secondary { background-color: #81d4fa; border: none; color: #333; }
+.btn-secondary:hover { background-color: #4fc3f7; }
+.btn-warning { background-color: #ffeb3b; border: none; color: #333; }
+.btn-warning:hover { background-color: #fdd835; }
+.btn-danger { background-color: #ff66b2; border: none; color: #fff; }
+.btn-danger:hover { background-color: #e0559d; }
+.form-control { border-radius: 12px; border: 2px solid #ba68c8; transition: 0.3s; }
+.form-control:focus { border-color: #81d4fa; box-shadow: 0 0 8px rgba(129,212,250,0.5); }
+.form-control-sm { padding: .25rem .5rem; font-size: .875rem; }
+table.table { background: #fdfdfd; width: 100%; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+table th { background: #f3e6f7; color: #6c3483; }
+table td { vertical-align: middle; }
+.alert-danger { background: #ffd6e8; color: #9b1c6d; border-radius: 12px; border: 1px solid #ffb3d9; }
+.alert-success { background: #d4edda; color: #155724; border-radius: 12px; border: 1px solid #b3ffcc; }
+td form { display: flex; gap: 5px; justify-content: center; align-items: center; margin-bottom: 0; }
 </style>
 </head>
 <body class="container mt-4">
@@ -192,20 +143,17 @@ table td {
         <?php foreach ($categories as $cat): ?>
             <tr>
                 <td><?= htmlspecialchars($cat['category_name']) ?></td>
-                <!-- ช่องแก้ไขชื่อ -->
                 <td>
-                    <input type="text" class="form-control form-control-sm" placeholder="ชื่อใหม่" name="new_name">
-                </td>
-                <!-- ช่องจัดการ -->
-                <td>
-                    <form method="post" class="d-flex justify-content-center align-items-center gap-2 mb-0">
+                    <form method="post" class="d-flex gap-2 justify-content-center align-items-center mb-0">
                         <input type="hidden" name="category_id" value="<?= $cat['category_id'] ?>">
-                        <input type="hidden" name="new_name" value="">
+                        <input type="text" class="form-control form-control-sm" name="new_name" value="<?= htmlspecialchars($cat['category_name']) ?>" required>
                         <button type="submit" name="update_category" class="btn btn-sm btn-warning">แก้ไข</button>
-                        <a href="category.php?delete=<?= $cat['category_id'] ?>" 
-                            class="btn btn-sm btn-danger"
-                            onclick="return confirm('คุณต้องการลบหมวดหมู่นี้หรือไม่?')">ลบ</a>
                     </form>
+                </td>
+                <td>
+                    <a href="category.php?delete=<?= $cat['category_id'] ?>" 
+                       class="btn btn-sm btn-danger"
+                       onclick="return confirm('คุณต้องการลบหมวดหมู่นี้หรือไม่?')">ลบ</a>
                 </td>
             </tr>
         <?php endforeach; ?>
