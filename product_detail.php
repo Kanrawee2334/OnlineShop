@@ -1,5 +1,5 @@
 <?php
-require_once 'config.php'; // เชื่อมฐานข้อมูล
+require_once 'config.php';
 session_start();
 
 if (!isset($_GET['id'])) {
@@ -16,6 +16,15 @@ $stmt->execute([$product_id]);
 $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
 $isLoggedIn = isset($_SESSION['user_id']); 
+
+// ตรวจสอบรูปภาพ
+$uploadDir = __DIR__ . '/product_images/';
+$uploadUrl = 'product_images/';
+if (!empty($product['image']) && file_exists($uploadDir . $product['image'])) {
+    $img = $uploadUrl . rawurlencode($product['image']);
+} else {
+    $img = $uploadUrl . 'no-image.jpg';
+}
 ?>
 
 <!DOCTYPE html>
@@ -35,21 +44,29 @@ $isLoggedIn = isset($_SESSION['user_id']);
         .card {
             border-radius: 20px;
             background: #fff;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .card img {
+            border-radius: 15px;
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
         }
         h3.card-title {
-            color: #d63384; /* ชมพูสดใส */
+            color: #d63384;
+            font-weight: 700;
         }
         h6.text-muted {
-            color: #9966cc !important; /* ม่วงอ่อน */
+            color: #9966cc !important;
         }
         .price-tag {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            color: #ff66b2; /* ชมพูเข้ม */
+            color: #ff3399;
         }
         .stock-tag {
-            color: #33cc99; /* เขียวพาสเทล */
+            color: #33cc99;
             font-weight: 600;
         }
         .btn-success {
@@ -93,42 +110,49 @@ $isLoggedIn = isset($_SESSION['user_id']);
 <body>
 
 <div class="container py-5">
-    <!-- ปุ่มย้อนกลับ -->
     <a href="index.php" class="btn btn-outline-secondary mb-4">← กลับหน้ารายการสินค้า</a>
 
-    <!-- การ์ดรายละเอียดสินค้า -->
-    <div class="card shadow-lg border-0 rounded-3">
-        <div class="card-body p-4">
-            <h3 class="card-title fw-bold mb-3"><?= htmlspecialchars($product['product_name']) ?></h3>
-            <h6 class="mb-3">หมวดหมู่: <?= htmlspecialchars($product['category_name']) ?></h6>
-            
-            <p class="price-tag mb-2">
-                ราคา: <?= number_format($product['price'], 2) ?> บาท
-            </p>
-            <p class="stock-tag mb-4">
-                คงเหลือ: <?= htmlspecialchars($product['stock']) ?> ชิ้น
-            </p>
+    <div class="card shadow-lg border-0">
+        <div class="row g-0">
+            <!-- รูปสินค้า -->
+            <div class="col-md-5 p-3 d-flex align-items-center">
+                <img src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($product['product_name']) ?>">
+            </div>
 
-            <!-- เช็คการล็อกอิน -->
-            <?php if ($isLoggedIn): ?>
-                <form action="cart.php" method="post" class="d-flex align-items-end gap-3">
-                    <input type="hidden" name="product_id" value="<?= $product['product_id'] ?>">
+            <!-- รายละเอียด -->
+            <div class="col-md-7">
+                <div class="card-body p-4">
+                    <h3 class="card-title mb-3"><?= htmlspecialchars($product['product_name']) ?></h3>
+                    <h6 class="mb-3">หมวดหมู่: <?= htmlspecialchars($product['category_name']) ?></h6>
+                    
+                    <p class="price-tag mb-2">
+                        ราคา: <?= number_format($product['price'], 2) ?> บาท
+                    </p>
+                    <p class="stock-tag mb-4">
+                        คงเหลือ: <?= htmlspecialchars($product['stock']) ?> ชิ้น
+                    </p>
 
-                    <div>
-                        <label for="quantity" class="form-label">จำนวน:</label>
-                        <input type="number" name="quantity" id="quantity" 
-                               class="form-control" value="1" min="1" max="<?= $product['stock'] ?>" required>
-                    </div>
+                    <?php if ($isLoggedIn): ?>
+                        <form action="cart.php" method="post" class="d-flex align-items-end gap-3">
+                            <input type="hidden" name="product_id" value="<?= $product['product_id'] ?>">
 
-                    <button type="submit" class="btn btn-success">
-                        🛒 เพิ่มในตะกร้า
-                    </button>
-                </form>
-            <?php else: ?>
-                <div class="alert alert-info mt-4">
-                    กรุณา <a href="login.php" class="alert-link">เข้าสู่ระบบ</a> เพื่อสั่งซื้อสินค้า
+                            <div>
+                                <label for="quantity" class="form-label">จำนวน:</label>
+                                <input type="number" name="quantity" id="quantity" 
+                                    class="form-control" value="1" min="1" max="<?= $product['stock'] ?>" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-success">
+                                🛒 เพิ่มในตะกร้า
+                            </button>
+                        </form>
+                    <?php else: ?>
+                        <div class="alert alert-info mt-4">
+                            กรุณา <a href="login.php" class="alert-link">เข้าสู่ระบบ</a> เพื่อสั่งซื้อสินค้า
+                        </div>
+                    <?php endif; ?>
                 </div>
-            <?php endif; ?>
+            </div>
         </div>
     </div>
 </div>
